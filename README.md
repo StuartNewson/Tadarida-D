@@ -1,6 +1,3 @@
-# Tadarida-D
-COPY OF TADARIDA FOR TESTING: A Toolbox for Animal Detection on Acoustic Recordings Integrating Discriminant Analysis - Detection and Feature extraction part
-
 How to build on CentOS 6
 ========================
 Original code downloaded from https://github.com/YvesBas/Tadarida-D
