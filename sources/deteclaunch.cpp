@@ -128,11 +128,20 @@ bool DetecLaunch::Treat(int argc, char *argv[])
     else _nSeries = 0;
     // -----------------------------------------------------------------
     // initializations
-    logDirPath = QDir::currentPath()+"/log";
-    QDir logDir(logDirPath);
+   // Get path to first WAV on the list and use that as the base location for the log files
+    	QFileInfo fiTmp(firstList.at(0));
+        QDir logDir(fiTmp.absolutePath() + QDir::separator() + QString("log"));
+	logDirPath = logDir.absolutePath();
+   //	std::cout << logDirPath.toStdString() << std::endl;
+
+
     if(!logDir.exists()) logDir.mkdir(logDirPath);
-    QString logFilePath(logDirPath + QString("/tadaridaD.log"));
-    _logFile.setFileName(logFilePath);
+	QString logFilePath(logDirPath + QDir::separator() + fiTmp.baseName() + QString("_") + QString("tadaridaD.log"));
+   //		std::cout << logFilePath.toStdString() << std::endl;
+
+	
+	
+	_logFile.setFileName(logFilePath);
     _logFile.open(QIODevice::WriteOnly | QIODevice::Text);
     LogStream.setDevice(&_logFile);
     if(!_helpShown) showInfo("Launch TadaridaD",true);
@@ -254,8 +263,8 @@ bool DetecLaunch::Treat(int argc, char *argv[])
             {
                 // creating a thread
                 if(_nbThreads>1) threadSuffixe = QString("_") + QString::number(i+1);
-                if(_nbThreads==1) pdetec[i] = new Detec(this,i,threadSuffixe,_modeDirFile,_wavPath,_wavFileList,_wavRepList,_timeExpansion,_withTimeCsv,_paramVersion,IDebug,_launchRecord,_mustCompress,_modeFreq);
-                else  pdetec[i] = new Detec(this,i,threadSuffixe,_modeDirFile,_wavPath,pWavFileList[i],_wavRepList,_timeExpansion,_withTimeCsv,_paramVersion,IDebug,_launchRecord,_mustCompress,_modeFreq);
+                if(_nbThreads==1) pdetec[i] = new Detec(this,i,threadSuffixe,_modeDirFile,logDirPath,_wavPath,_wavFileList,_wavRepList,_timeExpansion,_withTimeCsv,_paramVersion,IDebug,_launchRecord,_mustCompress,_modeFreq);
+                else  pdetec[i] = new Detec(this,i,threadSuffixe,_modeDirFile,logDirPath,_wavPath,pWavFileList[i],_wavRepList,_timeExpansion,_withTimeCsv,_paramVersion,IDebug,_launchRecord,_mustCompress,_modeFreq);
                 connect(pdetec[i], SIGNAL(info1(QString,int)),this, SLOT(detecInfoTreat(QString,int)));
                 // launching this thread
                 pdetec[i]->start();
