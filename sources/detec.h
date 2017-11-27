@@ -91,6 +91,7 @@ private:
     QString                            _txtPath;
     bool                                  _useValflag;
     QStringList                      _wavFileList;
+    QString                            _logPath;
     QString                            _wavPath;
     QStringList                     _wavRepList;
     int                                    _qN;
