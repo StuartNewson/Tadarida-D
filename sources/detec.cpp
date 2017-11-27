@@ -4,7 +4,7 @@
 using namespace std;
 
 
-Detec::Detec(DetecLaunch *pdl,int iThread,QString threadSuffixe,int modeDirFile,QString wavPath,QStringList wavFileList,QStringList wavRepList,int timeExpansion,bool withTimeCsv,int parVer,bool iDebug,bool withSox,bool mustCompress,int modeFreq): QThread((QObject *)pdl)
+Detec::Detec(DetecLaunch *pdl,int iThread,QString threadSuffixe,int modeDirFile,QString logPath,QString wavPath,QStringList wavFileList,QStringList wavRepList,int timeExpansion,bool withTimeCsv,int parVer,bool iDebug,bool withSox,bool mustCompress,int modeFreq): QThread((QObject *)pdl)
 {
     // detec class : deteclaunch treatment launches detec objects as threads which share sound files to treat
     // initialization of variables :
@@ -12,6 +12,7 @@ Detec::Detec(DetecLaunch *pdl,int iThread,QString threadSuffixe,int modeDirFile,
     IThread = iThread;
     _threadSuffixe = threadSuffixe;
     _modeDirFile = modeDirFile;
+    _logPath = logPath;
     _wavPath = wavPath;
     _wavFileList = wavFileList;
     _wavRepList = wavRepList;
@@ -63,20 +64,23 @@ Detec::~Detec()
 {
     delete _detecTreatment;
 }
-
+ 
 bool Detec::initializeDetec()
 {
     // initialization of log files
-    QString logDirPath = QDir::currentPath()+"/log";
-    QString logFilePath(logDirPath + QString("/detec")+_threadSuffixe+".log");
+    // User first wav name for Log prefix (this assumes non multi-threading, e.g. single wav file cluster use).
+    QFileInfo fiTmp(_wavFileList.at(0));
+    QString logDirPath = _logPath;
+    QString logFilePath(logDirPath + QDir::separator() + fiTmp.baseName() + QString("_") + QString("detec")+_processSuffixe+_threadSuffixe+".log");
+    
     _logFile.setFileName(logFilePath);
     _logFile.open(QIODevice::WriteOnly | QIODevice::Text);
     LogStream.setDevice(&_logFile);
     LogStream.setRealNumberNotation(QTextStream::FixedNotation);
     LogStream.setRealNumberPrecision(22);
 
-    LogStream << "Lancement Detec" <<_threadSuffixe << " : " << QDateTime::currentDateTime().toString("hh:mm:ss:zzz") << endl;
-    QString errorFilePath(logDirPath + QString("/error")+_threadSuffixe+".log");
+    LogStream << "Launching Detec" <<_threadSuffixe << " : " << QDateTime::currentDateTime().toString("hh:mm:ss:zzz") << endl;
+    QString errorFilePath(logDirPath + QDir::separator() + fiTmp.baseName() + QString("_") + QString("error")+_processSuffixe+_threadSuffixe+".log");
     _errorFile.setFileName(errorFilePath);
     if(_errorFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -108,7 +112,7 @@ void Detec::endDetec()
     if(ErrorFileOpen) _errorFile.close();
     if(TimeFileOpen) _timeFile.close();
     _detecTreatment->EndDetecTreatment();
-    LogStream << "End of treatments by Detec object" << _threadSuffixe << " : " << QDateTime::currentDateTime().toString("hh:mm:ss:zzz") << endl;
+    LogStream << "End of treatment by Detec object" << _threadSuffixe << " : " << QDateTime::currentDateTime().toString("hh:mm:ss:zzz") << endl;
     _logFile.close();
 }
 
