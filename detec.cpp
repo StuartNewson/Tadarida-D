@@ -67,9 +67,14 @@ Detec::~Detec()
  
 bool Detec::initializeDetec()
 {
-    // initialization of log files
-    // User first wav name for Log prefix (this assumes non multi-threading, e.g. single wav file cluster use).
-    QFileInfo fiTmp(_wavFileList.at(0));
+   	// Get path to first WAV on the list if in FILESMODE and use that as the base location for the log files
+	// prefix (this assumes non multi-threading, e.g. single wav file cluster use), otherwise just put everything into single files.
+	QFileInfo fiTmp;
+	if (_modeDirFile == FILESMODE) {
+		fiTmp = QFileInfo(_wavFileList.at(0));
+	} else {
+		fiTmp = QFileInfo(_wavPath);
+	}
     QString logDirPath = _logPath;
     QString logFilePath(logDirPath + QDir::separator() + fiTmp.baseName() + QString("_") + QString("detec")+_processSuffixe+_threadSuffixe+".log");
     
