@@ -35,7 +35,7 @@ class Detec : public QThread
 {
     Q_OBJECT
 public:
-    explicit Detec(DetecLaunch *,int,QString,int,QString,QStringList,QStringList,int,bool,int,bool,bool,bool,int);
+    explicit Detec(DetecLaunch *,int,QString,int,QString,QString,QStringList,QStringList,int,bool,int,bool,bool,bool,int);
     Detec(int);
     ~Detec();
     void                                  run();
