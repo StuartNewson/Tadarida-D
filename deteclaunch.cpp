@@ -17,7 +17,7 @@ bool DetecLaunch::Treat(int argc, char *argv[])
 {
     // Treat : this method manages the whole treatment
 	// Initializations
-    _timeExpansion = 10;
+    _timeExpansion = 1;
     _nbThreads = 1;
     _withTimeCsv = false;
     _paramVersion = 1;  
