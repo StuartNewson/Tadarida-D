@@ -128,8 +128,13 @@ bool DetecLaunch::Treat(int argc, char *argv[])
     else _nSeries = 0;
     // -----------------------------------------------------------------
     // initializations
-   // Get path to first WAV on the list and use that as the base location for the log files
-    	QFileInfo fiTmp(firstList.at(0));
+	// Get path to first WAV on the list if in FILESMODE and use that as the base location for the log files
+	QFileInfo fiTmp;
+	if (_modeDirFile == FILESMODE) {
+		fiTmp = QFileInfo(firstList.at(0));
+	} else {
+		fiTmp = QFileInfo(_wavPath);
+	}
         QDir logDir(fiTmp.absolutePath() + QDir::separator() + QString("log"));
 	logDirPath = logDir.absolutePath();
    //	std::cout << logDirPath.toStdString() << std::endl;
