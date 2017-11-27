@@ -15,6 +15,7 @@
 #include "fftw3.h"
 
 #include <QPoint>
+#include <qdatastream.h>
 
 #define	FFT_HEIGHT_MAX 4096
 #define	FFT_HEIGHT_HALF_MAX 2048
