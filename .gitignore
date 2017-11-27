@@ -22,9 +22,11 @@
 *.a
 *.lib
 
+# moc stuff
+moc_*
+
 # Executables
 *.exe
 *.out
 *.app
-~$st_plan_tadaridaD_linux.odt
-~$st_plan_tadaridaD_linux.odt
+tadaridaD
